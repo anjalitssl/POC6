@@ -48,12 +48,12 @@ pipeline {
         stage('Dependency Check') {
             steps {
                 sh '''
-                   mvn org.owasp:dependency-check-maven:check \
-                   -Dformat=ALL \
-                   -Danalyzer.nvd.api.enabled=false \
-                   -Danalyzer.nvd.api.delay=0 \
-                   -DfailOnError=false \
-                   -DfailBuildOnAnyVulnerability=false
+                    mvn org.owasp:dependency-check-maven:check \
+                    -Dformat=ALL \
+                    -Danalyzer.nvd.api.enabled=false \
+                    -Danalyzer.nvd.api.delay=0 \
+                    -DfailOnError=false \
+                    -DfailBuildOnAnyVulnerability=false
                 '''
             }
         }
@@ -66,7 +66,10 @@ pipeline {
 
         stage('Trivy Scan') {
             steps {
-                sh 'trivy image poc6-image || true'
+                sh '''
+                    export PATH="/opt/homebrew/bin:$PATH"
+                    trivy image poc6-image || true
+                '''
             }
         }
 
@@ -82,7 +85,7 @@ pipeline {
 
         stage('Run Container') {
             steps {
-                sh "docker run -d -p 8081:8080 ${IMAGE_NAME}"
+                sh "docker run -d -p 9090:8080 ${IMAGE_NAME}"
             }
         }
     }
