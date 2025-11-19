@@ -46,9 +46,10 @@ options {
 
         stage('Dependency Check') {
             steps {
-                sh 'dependency-check.sh --project poc6 --scan . || true'
+                sh 'mvn org.owasp:dependency-check-maven:check -Dformat=ALL'
             }
         }
+
 
         stage('Docker Build') {
             steps {
