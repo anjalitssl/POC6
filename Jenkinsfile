@@ -1,8 +1,9 @@
 pipeline {
     agent any
-options {
-    skipDefaultCheckout()
-}
+
+    options {
+        skipDefaultCheckout()
+    }
 
     tools {
         maven 'Maven3'
@@ -12,7 +13,7 @@ options {
     environment {
         SONARQUBE = "MySonar"
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-cred')
-        IMAGE_NAME = "anjali/poc6"
+        IMAGE_NAME = "anjalitssl/poc6"
     }
 
     stages {
@@ -56,8 +57,6 @@ options {
                 '''
             }
         }
-
-
 
         stage('Docker Build') {
             steps {
