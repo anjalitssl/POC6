@@ -21,7 +21,7 @@ options {
             steps {
                 git branch: 'main',
                     credentialsId: 'github-cred',
-                    url: 'https://github.com/anjalistssl/POC6.git'
+                    url: 'https://github.com/anjalitssl/POC6.git'
             }
         }
 
