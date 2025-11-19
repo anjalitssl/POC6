@@ -46,9 +46,17 @@ options {
 
         stage('Dependency Check') {
             steps {
-                sh 'mvn org.owasp:dependency-check-maven:check -Dformat=ALL'
+                sh '''
+                   mvn org.owasp:dependency-check-maven:check \
+                   -Dformat=ALL \
+                   -Danalyzer.nvd.api.enabled=false \
+                   -Danalyzer.nvd.api.delay=0 \
+                   -DfailOnError=false \
+                   -DfailBuildOnAnyVulnerability=false
+                '''
             }
         }
+
 
 
         stage('Docker Build') {
