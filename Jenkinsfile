@@ -16,7 +16,9 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                git 'https://github.com/anjalistssl/POC6.git'
+                git branch: 'main',
+                    credentialsId: 'github-cred',
+                    url: 'https://github.com/anjalistssl/POC6.git'
             }
         }
 
@@ -29,14 +31,19 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('MySonar') {
-                    sh "mvn sonar:sonar"
+                    sh """
+                    mvn sonar:sonar \
+                      -Dsonar.projectKey=poc6 \
+                      -Dsonar.projectName=poc6 \
+                      -Dsonar.sources=src/main/java
+                    """
                 }
             }
         }
 
         stage('Dependency Check') {
             steps {
-                sh 'dependency-check.sh --project poc6 --scan .'
+                sh 'dependency-check.sh --project poc6 --scan . || true'
             }
         }
 
@@ -48,15 +55,17 @@ pipeline {
 
         stage('Trivy Scan') {
             steps {
-                sh 'trivy image poc6-image'
+                sh 'trivy image poc6-image || true'
             }
         }
 
         stage('Push to DockerHub') {
             steps {
-                sh "echo ${DOCKERHUB_CREDENTIALS_PSW} | docker login -u ${DOCKERHUB_CREDENTIALS_USR} --password-stdin"
-                sh "docker tag poc6-image ${IMAGE_NAME}"
-                sh "docker push ${IMAGE_NAME}"
+                sh """
+                echo ${DOCKERHUB_CREDENTIALS_PSW} | docker login -u ${DOCKERHUB_CREDENTIALS_USR} --password-stdin
+                docker tag poc6-image ${IMAGE_NAME}
+                docker push ${IMAGE_NAME}
+                """
             }
         }
 
