@@ -89,14 +89,13 @@ pipeline {
                 sh """
                     docker pull ${IMAGE_NAME}:latest
 
-                    # Stop old container if running
                     docker stop poc6 || true
                     docker rm poc6 || true
 
-                    # Run new container
                     docker run -d --name poc6 -p 9090:8080 ${IMAGE_NAME}:latest
                 """
             }
         }
+
     }
 }
