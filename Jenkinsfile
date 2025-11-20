@@ -28,7 +28,8 @@ pipeline {
 
         stage('Maven Build') {
             steps {
-                sh 'mvn clean package spring-boot:repackage -DskipTests'
+                sh 'mvn clean package -DskipTests'
+
             }
         }
 
@@ -85,6 +86,10 @@ pipeline {
 
         stage('Run Container') {
             steps {
+
+            sh "docker stop poc6 || true"
+            sh "docker rm poc6 || true"
+
                 sh "docker run -d -p 9090:8080 ${IMAGE_NAME}"
             }
         }
